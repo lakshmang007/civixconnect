@@ -51,8 +51,8 @@ export default function App() {
 
   // Expose notify globally for demo purposes
   useEffect(() => {
-    (window as any).notifyEmail = (target: string, type: string) => {
-      addNotification(`📧 Mail triggered to ${target} (${type})`, 'mail');
+    (window as any).notifyEmail = (target: string, text: string) => {
+      addNotification(`Outbound: ${text} → ${target}`, 'mail');
     };
   }, []);
 
@@ -154,6 +154,7 @@ export default function App() {
           user={user} 
           onFilterChange={(zip) => setSelectedZip(zip)} 
           onMenuClick={() => setSidebarOpen(true)}
+          onNotificationClick={() => addNotification('System Status: All services operational. 0 unread alerts.', 'info')}
         />
         
         <main className="flex-1 p-4 sm:p-6 overflow-hidden">

@@ -9,9 +9,10 @@ interface HeaderProps {
   user: User;
   onFilterChange: (zipCode: string) => void;
   onMenuClick: () => void;
+  onNotificationClick: () => void;
 }
 
-export function Header({ user, onFilterChange, onMenuClick }: HeaderProps) {
+export function Header({ user, onFilterChange, onMenuClick, onNotificationClick }: HeaderProps) {
   const { t, language, setLanguage } = useLanguage();
   const [zipCodes, setZipCodes] = useState<ZipCode[]>([]);
   const [selectedZip, setSelectedZip] = useState('');
@@ -77,11 +78,10 @@ export function Header({ user, onFilterChange, onMenuClick }: HeaderProps) {
           <MapPin className="w-3 h-3" />
           {selectedZip ? `${t('area')}: ${selectedZip}` : `Shivajinagar (560001)`}
         </div>
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-          {t('onlineStats')}
-        </div>
-        <button className="relative p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+        <button 
+          onClick={onNotificationClick}
+          className="relative p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+        >
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
         </button>

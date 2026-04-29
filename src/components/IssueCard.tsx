@@ -220,7 +220,7 @@ export function IssueCard({ issue, user, isPersonalFeed }: IssueCardProps) {
         });
         const result = await response.json();
         if (result.success) {
-          if ((window as any).notifyEmail) (window as any).notifyEmail(result.sentTo, 'ESCALATION ALERT');
+          if ((window as any).notifyEmail) (window as any).notifyEmail(result.sentTo, `Issue Escalated (#${issue.id.slice(-4).toUpperCase()})`);
           console.log(`Notification sent to ${result.sentTo}`);
         }
       } catch (f) {

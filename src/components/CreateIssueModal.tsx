@@ -111,7 +111,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
             isGuestMode
           })
         });
-        if ((window as any).notifyEmail) (window as any).notifyEmail('studylucky4@gmail.com', 'ISSUE SUBMISSION');
+        if ((window as any).notifyEmail) (window as any).notifyEmail('studylucky4@gmail.com', `New Submission: "${data.title}"`);
         console.log("Submission notification triggered for studylucky4@gmail.com");
       } catch (e) {
         console.error("Email trigger failed:", e);

@@ -16,7 +16,8 @@ import {
   Minimize2,
   RefreshCcw,
   ChevronRight,
-  Mail
+  Mail,
+  Navigation
 } from 'lucide-react';
 import { ChatState, getResponse, saveToDB } from '../services/mockLlmService';
 import { User } from 'firebase/auth';
@@ -62,7 +63,16 @@ export function SmartElectionBot({ user, zipCode }: SmartElectionBotProps) {
     locationName: zipCode || undefined
   });
   const [isTyping, setIsTyping] = useState(false);
+  const [currentCoords, setCurrentCoords] = useState<{lat: number, lng: number} | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setCurrentCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      }, (err) => console.log("Location not shared:", err));
+    }
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -115,7 +125,7 @@ export function SmartElectionBot({ user, zipCode }: SmartElectionBotProps) {
           action: 'Verification & Registration Bot Flow'
         })
       });
-      if ((window as any).notifyEmail) (window as any).notifyEmail('studylucky4@gmail.com', 'CHATBOT ACTIVITY');
+      if ((window as any).notifyEmail) (window as any).notifyEmail('studylucky4@gmail.com', `Election Monitor Alert: Verified Resident Active`);
       console.log("Email notification triggered to studylucky4@gmail.com");
     } catch (error) {
       console.error("Failed to notify monitor:", error);
@@ -324,15 +334,27 @@ export function SmartElectionBot({ user, zipCode }: SmartElectionBotProps) {
                     <motion.div 
                       initial={{ scale: 0.9, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="mt-4 w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+                      className="mt-4 w-full flex flex-col gap-3"
                     >
-                      <iframe 
-                        width="100%" 
-                        height="100%" 
-                        frameBorder="0" 
-                        loading="lazy"
-                        src={`https://maps.google.com/maps?q=${encodeURIComponent(m.mapQuery)}&output=embed`}
-                      />
+                      <div className="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                        <iframe 
+                          width="100%" 
+                          height="100%" 
+                          frameBorder="0" 
+                          loading="lazy"
+                          src={`https://maps.google.com/maps?q=${encodeURIComponent(m.mapQuery)}&output=embed`}
+                        />
+                      </div>
+                      <button 
+                         onClick={() => {
+                           const origin = currentCoords ? `${currentCoords.lat},${currentCoords.lng}` : 'My+Location';
+                           window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${encodeURIComponent(m.mapQuery)}&travelmode=driving`, '_blank');
+                         }}
+                         className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black text-white uppercase tracking-widest transition-all"
+                      >
+                        <Navigation className="w-4 h-4 text-blue-400" />
+                        Navigate to Polling Station
+                      </button>
                     </motion.div>
                   )}
                 </div>
