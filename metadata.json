@@ -1,0 +1,9 @@
+{
+  "name": "CivixConnect",
+  "description": "A hyper-local civic accountability platform for community-driven problem solving and escalation to local authorities.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}

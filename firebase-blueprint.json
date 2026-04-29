@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "Issue": {
+      "title": "Civic Issue",
+      "description": "An issue reported by a citizen",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string", "enum": ["Waste", "Pothole", "Water", "Electricity", "Other"] },
+        "location": { "type": "object", "description": "Geo-tagged location" },
+        "status": { "type": "string", "enum": ["Community Poll", "Escalated to Authority", "Resolved"] },
+        "votesCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string" },
+        "zipCode": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "authorityId": { "type": "string" }
+      },
+      "required": ["title", "description", "category", "status", "votesCount", "createdAt", "userId", "zipCode"]
+    },
+    "ZipCode": {
+      "title": "Service Area",
+      "description": "A recognized service area/zip code",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "required": ["code", "name"]
+    },
+    "Authority": {
+      "title": "Local Authority",
+      "description": "Official responsible for resolving issues",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "department": { "type": "string" },
+        "status": { "type": "string", "enum": ["In-Office", "On-Field", "Unavailable"] },
+        "resolutionCount": { "type": "integer" },
+        "photoUrl": { "type": "string" }
+      },
+      "required": ["name", "department", "status", "resolutionCount"]
+    },
+    "Vote": {
+      "title": "Vote",
+      "description": "A vote cast by a neighbor",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "issueId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "issueId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/issues/{issueId}": {
+      "schema": "Issue",
+      "description": "Collection of community-reported issues"
+    },
+    "/issues/{issueId}/votes/{userId}": {
+      "schema": "Vote",
+      "description": "Votes for a specific issue to prevent duplicates"
+    },
+    "/authorities/{authorityId}": {
+      "schema": "Authority",
+      "description": "Directory of local authorities"
+    },
+    "/zipCodes/{zipCodeId}": {
+      "schema": "ZipCode",
+      "description": "List of active community zip codes"
+    }
+  }
+}

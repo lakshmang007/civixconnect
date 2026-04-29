@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+    function isValidIssue(data) {
+      return data.keys().hasAll(['title', 'description', 'category', 'status', 'votesCount', 'createdAt', 'updatedAt', 'userId', 'zipCode'])
+        && data.title is string && data.title.size() <= 200
+        && data.description is string && data.description.size() <= 2000
+        && data.category in ['Waste', 'Pothole', 'Water', 'Electricity', 'Other']
+        && data.status in ['Community Poll', 'Escalated to Authority', 'Resolved']
+        && data.votesCount is int
+        && data.zipCode is string && data.zipCode.size() <= 10
+        && data.userId == request.auth.uid
+        && (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 1048576));
+    }
+
+    function isValidAuthority(data) {
+      return data.keys().hasAll(['name', 'department', 'status', 'resolutionCount'])
+        && data.name is string && data.name.size() <= 100
+        && data.department is string && data.department.size() <= 100
+        && data.status in ['In-Office', 'On-Field', 'Unavailable']
+        && data.resolutionCount is int;
+    }
+
+    function isValidVote(data) {
+      return data.keys().hasAll(['userId', 'issueId', 'createdAt'])
+        && (data.userId == request.auth.uid || (data.userId is string && data.userId.matches('^guest_.*')))
+        && data.issueId is string
+        && data.createdAt == request.time;
+    }
+
+    function isValidZipCode(data) {
+      return data.keys().hasAll(['code', 'name'])
+        && data.code is string && data.code.size() <= 10
+        && data.name is string && data.name.size() <= 100;
+    }
+
+    // --- Collections ---
+
+    match /issues/{issueId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() 
+        && isValidId(issueId)
+        && isValidIssue(incoming())
+        && incoming().status == 'Community Poll'
+        && incoming().votesCount == 0
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      
+      allow update: if isSignedIn() && isValidId(issueId) && (
+        // Action: Vote
+        (incoming().diff(existing()).affectedKeys().hasOnly(['votesCount', 'updatedAt']) 
+          && (incoming().votesCount == existing().votesCount + 1 || incoming().votesCount == existing().votesCount - 1)
+          && incoming().updatedAt == request.time)
+        ||
+        // Action: Escalate
+        (incoming().diff(existing()).affectedKeys().hasOnly(['status', 'authorityId', 'updatedAt'])
+          && incoming().status == 'Escalated to Authority'
+          && existing().votesCount >= 1
+          && incoming().updatedAt == request.time)
+        ||
+        // Action: Resolve
+        (incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt'])
+          && incoming().status == 'Resolved'
+          && incoming().updatedAt == request.time)
+      );
+
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+      
+      match /votes/{userId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() 
+          && (userId == request.auth.uid || userId.matches('^guest_.*'))
+          && isValidId(userId)
+          && isValidVote(incoming())
+          && incoming().issueId == issueId;
+        allow delete: if isSignedIn() && (userId == request.auth.uid || userId.matches('^guest_.*'));
+      }
+    }
+
+    match /authorities/{authorityId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(authorityId); // Allow seeding for prototype
+    }
+
+    match /zipCodes/{zipCodeId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(zipCodeId); // Allow seeding for prototype
+    }
+  }
+}
