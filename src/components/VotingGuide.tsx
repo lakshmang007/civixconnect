@@ -59,6 +59,14 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
     { phase: 7, date: '01-06-2024', states: 8, pcs: 57 },
   ];
 
+  const electionRoadmap = [
+    { title: 'Notification', date: 'March 16', status: 'completed', icon: '📢' },
+    { title: 'Nominations', date: 'March-April', status: 'completed', icon: '📝' },
+    { title: 'Campaigning', date: 'Ongoing', status: 'active', icon: '📣' },
+    { title: 'Polling', date: 'Apr-Jun', status: 'upcoming', icon: '🗳️' },
+    { title: 'Counting', date: 'June 4th', status: 'upcoming', icon: '🔢' },
+  ];
+
   const totalStepsCount = registrationSteps.length + boothSteps.length;
   const progress = Math.round((completedSteps.size / totalStepsCount) * 100);
 
@@ -133,6 +141,39 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
         {/* Background blobs */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-600/5 rounded-full blur-2xl -ml-24 -mb-24"></div>
+      </div>
+
+      {/* Interactive Roadmap */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 ml-2">
+           <div className="w-2 h-6 bg-blue-600 rounded-full" />
+           <h3 className="text-xl font-black text-slate-900">Election Process Timeline</h3>
+        </div>
+        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm overflow-x-auto no-scrollbar">
+          <div className="flex items-center justify-between min-w-[800px] relative">
+            {/* Connection Line */}
+            <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 z-0" />
+            
+            {electionRoadmap.map((item, idx) => (
+              <div key={item.title} className="relative z-10 flex flex-col items-center gap-4 px-4 bg-white">
+                <div className={cn(
+                  "w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg transition-all",
+                  item.status === 'completed' ? "bg-emerald-500 text-white shadow-emerald-500/20" : 
+                  item.status === 'active' ? "bg-blue-600 text-white shadow-blue-600/20 scale-110" : 
+                  "bg-slate-50 text-slate-400 border border-slate-100"
+                )}>
+                  {item.icon}
+                </div>
+                <div className="text-center">
+                  <p className={cn("text-xs font-black uppercase tracking-widest", item.status === 'active' ? "text-blue-600" : "text-slate-900")}>
+                    {item.title}
+                  </p>
+                  <p className="text-[10px] font-bold text-slate-400">{item.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Top Actions Grid */}

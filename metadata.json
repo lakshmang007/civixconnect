@@ -1,6 +1,6 @@
 {
-  "name": "CivixConnect AI",
-  "description": "CivixConnect AI: An intelligence-driven Election Assistant & Civic Empowerment platform. Features real-time AI voter verification, Google Maps polling station logistics, and automated civic escalation pathways for hyper-local community transparency.",
+  "name": "Civix Election AI",
+  "description": "An interactive Election Process Education platform. Features AI-guided voter roadmaps, election timelines, step-by-step registration guides, and polling station navigation. Designed to empower citizens with knowledge of election steps and timelines.",
   "requestFramePermissions": [
     "camera",
     "geolocation"

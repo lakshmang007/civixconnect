@@ -76,9 +76,10 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
         </motion.div>
       )}
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h2 className="text-lg font-bold text-slate-800">{filterUserId ? "Your Submission History" : t('priorityFeed')}</h2>
-        <div className="flex gap-2 text-xs">
+        <div className="flex items-center gap-2 text-[10px] sm:text-xs">
+          <span className="text-slate-400 font-bold uppercase tracking-tight mr-1 hidden xs:inline">Sort By:</span>
           <button 
             onClick={() => setSortBy('latest')}
             className={cn(

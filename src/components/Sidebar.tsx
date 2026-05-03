@@ -37,9 +37,9 @@ export function Sidebar({ activeTab, setActiveTab, user, selectedZip, isOpen, on
   };
 
   const menuItems = [
+    { id: 'Voting', label: 'Election Assistant', icon: Vote },
     { id: 'Feed', label: t('communityFeed'), icon: LayoutDashboard },
     { id: 'Authorities', label: t('authorityDirectory'), icon: ShieldCheck },
-    { id: 'Voting', label: t('voterGuide'), icon: Vote },
     { id: 'My Issues', label: t('myIssues'), icon: ClipboardList },
   ] as const;
 

@@ -51,7 +51,7 @@ export function SmartElectionBot({ user, zipCode }: SmartElectionBotProps) {
   
   const initialBotMessage: Message = { 
     role: 'bot', 
-    text: `Hello, ${user.displayName || 'Citizen'}. I am your AI Civic Assistant, powered by Gemini. To help verify your registration or find polling details in Google Maps for ${zipCode || 'your area'}, please select your language:`,
+    text: `Hello, ${user.displayName || 'Citizen'}. I am your AI Civic Assistant, powered by Gemini. I can help you understand the election process, track timelines, or find your polling station. Please select your language:`,
     options: ['English', 'Kannada']
   };
 

@@ -4,7 +4,7 @@
  */
 
 export interface ChatState {
-  step: 'LANGUAGE' | 'CITIZEN' | 'VOTER_ID' | 'REGISTRATION' | 'LOCATE' | 'COMPLETE';
+  step: 'LANGUAGE' | 'MAIN_MENU' | 'EDUCATION' | 'TIMELINE' | 'CITIZEN' | 'VOTER_ID' | 'REGISTRATION' | 'LOCATE' | 'COMPLETE';
   language?: string;
   userName?: string;
   locationName?: string;
@@ -45,22 +45,26 @@ export const findUserInDB = (name: string) => {
 // Translation map
 const translations: Record<string, any> = {
   English: {
-    welcome: "Hello {name}! As a member of {location}, I'm here to assist you with your national election requirements. Are you a legal citizen?",
+    welcome: "Hello {name}! I am your AI Civic Assistant. I can help you understand the election process, track timelines, or find your polling station. What would you like to do?",
     voterId: "Excellent. Do you already possess a valid Voter ID card?",
     registration: "Registration required. Please fill out our secure inline registration portal to proceed.",
     notCitizen: "I'm sorry, you must be a citizen to participate in national elections. Please contact your local embassy for non-citizen rights.",
     locate: "Welcome back! Your record in {location} is verified. Please provide your current Zip Code or Ward number to find your polling station.",
     syncFailed: "Your name wasn't found in our recent synchronization. Please complete a fresh registration to ensure your data is current.",
-    complete: "Verification successful! Your designated Polling Station is: {station}."
+    complete: "Verification successful! Your designated Polling Station is: {station}.",
+    eduStart: "The election process follows these steps: \n1. Notification & Timeline\n2. Voter Registration\n3. Nominations & Campaigning\n4. Polling & Results. \n\nWhich area should we explore?",
+    timeline: "Election 2024 is conducted in 7 phases spanning from April to June. Counting happens on June 4th. Would you like to see phase-wise dates?",
   },
   Kannada: {
-    welcome: "ನಮಸ್ಕಾರ {name}! {location} ನಿವಾಸಿಯಾಗಿ, ರಾಷ್ಟ್ರೀಯ ಚುನಾವಣೆಯ ಬಗ್ಗೆ ನಿಮಗೆ ವಿವರ ನೀಡಲು ನಾನು ಇಲ್ಲಿದ್ದೇನೆ. ನೀವು ಕಾನೂನುಬದ್ಧ ಪ್ರಜೆಯೇ?",
+    welcome: "ನಮಸ್ಕಾರ {name}! ನಾನು ನಿಮ್ಮ AI ನಾಗರಿಕ ಸಹಾಯಕ. ಚುನಾವಣಾ ಪ್ರಕ್ರಿಯೆ, ಸಮಯ ಮತ್ತು ಮತದಾನ ಕೇಂದ್ರಗಳ ಬಗ್ಗೆ ನಾನು ಮಾಹಿತಿ ನೀಡಬಲ್ಲೆ. ನೀವು ಏನು ತಿಳಿಯಬಯಸುವಿರಿ?",
     voterId: "ಅತ್ಯುತ್ತಮ. ನಿಮ್ಮ ಬಳಿ ಈಗಾಗಲೇ ಮಾನ್ಯವಾದ ಮತದಾರರ ಗುರುತಿನ ಚೀಟಿ ಇದೆಯೇ?",
     registration: "ನೋಂದಣಿ ಅಗತ್ಯವಿದೆ. ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ನೋಂದಣಿ ಪೋರ್ಟಲ್ ಭರ್ತಿ ಮಾಡಿ.",
     notCitizen: "ಕ್ಷಮಿಸಿ, ರಾಷ್ಟ್ರೀಯ ಚುನಾವಣೆಗಳಲ್ಲಿ ಪಾಲ್ಗೊಳ್ಳಲು ನೀವು ಈ ದೇಶದ ಪ್ರಜೆಯಾಗಿರಬೇಕು.",
     locate: "ಮರಳಿ ಸ್ವಾಗತ! {location} ಭಾಗದ ನಿಮ್ಮ ದಾಖಲೆ ದೃಢೀಕರಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಪೋಲಿಂಗ್ ಕೇಂದ್ರಕ್ಕಾಗಿ ಪಿನ್ ಕೋಡ್ ನೀಡಿ.",
     syncFailed: "ದಾಖಲೆಗಳಲ್ಲಿ ನಿಮ್ಮ ಮಾಹಿತಿ ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಹೊಸದಾಗಿ ನೋಂದಣಿ ಮಾಡಿ.",
-    complete: "ದೃಢೀಕರಣ ಯಶಸ್ವಿಯಾಗಿದೆ! ನಿಮ್ಮ ಪೋಲಿಂಗ್ ಕೇಂದ್ರ: {station}."
+    complete: "ದೃಢೀಕರಣ ಯಶಸ್ವಿಯಾಗಿದೆ! ನಿಮ್ಮ ಪೋಲಿಂಗ್ ಕೇಂದ್ರ: {station}.",
+    eduStart: "ಚುನಾವಣಾ ಪ್ರಕ್ರಿಯೆಯ ಹಂತಗಳು: \n1. ಅಧಿಸೂಚನೆ ಮತ್ತು ಸಮಯ\n2. ಮತದಾರರ ನೋಂದಣಿ\n3. ನಾಮಪತ್ರ ಸಲ್ಲಿಕೆ\n4. ಮತದಾನ ಮತ್ತು ಫಲಿತಾಂಶ.",
+    timeline: "2024 ರ ಚುನಾವಣೆ ಏಪ್ರಿಲ್‌ನಿಂದ ಜೂನ್‌ವರೆಗೆ 7 ಹಂತಗಳಲ್ಲಿ ನಡೆಯಲಿದೆ.",
   }
 };
 
@@ -84,11 +88,54 @@ export const getResponse = (message: string, state: ChatState, updateState: (s: 
         };
       }
 
-      updateState({ step: 'CITIZEN', language: selected });
+      updateState({ step: 'MAIN_MENU', language: selected });
       const nextT = getT(selected);
       return {
-        text: nextT.welcome.replace('{name}', userName).replace('{location}', locationName),
+        text: nextT.welcome.replace('{name}', userName),
+        options: selected === 'English' 
+          ? ['Election Process 101', 'Election Timeline', 'Voter Verification']
+          : ['ಚುನಾವಣಾ ಪ್ರಕ್ರಿಯೆ 101', 'ಚುನಾವಣಾ ಸಮಯ', 'ಮತದಾರರ ದೃಢೀಕರಣ']
+      };
+
+    case 'MAIN_MENU':
+      if (msg.includes('101') || msg.includes('ಪಕ್ರಿಯೆ')) {
+        updateState({ step: 'EDUCATION' });
+        return {
+          text: t.eduStart,
+          options: ['Timeline', 'Registration', 'Polling Booth', 'Back']
+        };
+      }
+      if (msg.includes('timeline') || msg.includes('ಸಮಯ')) {
+        updateState({ step: 'TIMELINE' });
+        return {
+          text: t.timeline,
+          options: ['Show Phases', 'Back']
+        };
+      }
+      updateState({ step: 'CITIZEN' });
+      return {
+        text: t.welcome.replace('{name}', userName).replace('{location}', locationName),
         options: ['Yes', 'No']
+      };
+
+    case 'EDUCATION':
+      if (msg === 'back') {
+        updateState({ step: 'MAIN_MENU' });
+        return { text: t.welcome.replace('{name}', userName), options: ['Election Process 101', 'Election Timeline', 'Voter Verification'] };
+      }
+      return {
+        text: "Step-by-step guides are available in the 'Guide' tab too! Would you like details on something specific?",
+        options: ['Registration', 'Polling Booth', 'Main Menu']
+      };
+
+    case 'TIMELINE':
+      if (msg === 'back') {
+        updateState({ step: 'MAIN_MENU' });
+        return { text: t.welcome.replace('{name}', userName), options: ['Election Process 101', 'Election Timeline', 'Voter Verification'] };
+      }
+      return {
+        text: "Phase 1: April 19\nPhase 2: April 26\nPhase 3: May 7\n...\nResults: June 4.",
+        options: ['Back']
       };
 
     case 'CITIZEN':
