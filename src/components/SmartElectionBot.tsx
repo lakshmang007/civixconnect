@@ -34,7 +34,7 @@ interface Message {
 }
 
 interface SmartElectionBotProps {
-  user: User;
+  user: User | null;
   zipCode: string;
 }
 

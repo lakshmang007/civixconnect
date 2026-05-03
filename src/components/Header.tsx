@@ -6,7 +6,7 @@ import { issueService } from '../services/issueService';
 import { useLanguage, Language } from '../lib/LanguageContext';
 
 interface HeaderProps {
-  user: User;
+  user: User | null;
   onFilterChange: (zipCode: string) => void;
   onMenuClick: () => void;
   onNotificationClick: () => void;
@@ -88,7 +88,7 @@ export function Header({ user, onFilterChange, onMenuClick, onNotificationClick 
 
         <div className="lg:hidden flex items-center shrink-0">
           <img 
-             src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`}
+             src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.displayName || 'User'}&background=random`}
              alt="User Profile"
              className="w-8 h-8 rounded-full border border-slate-200 shadow-sm"
              onClick={onMenuClick}
