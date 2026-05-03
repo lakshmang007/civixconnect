@@ -50,17 +50,20 @@ export function AuthorityDirectory({ compact, selectedZip }: AuthorityDirectoryP
   if (compact) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
+        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4" id="local-reps-title">
           {selectedZip ? `Local Representatives (${selectedZip})` : t('authorityDirectory')}
         </h2>
-        <div className="space-y-3">
+        <div className="space-y-3" role="list" aria-labelledby="local-reps-title">
           {displayAuthorities.map((auth) => (
             <motion.div 
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               key={auth.id} 
+              role="listitem"
               onClick={() => openLedger(auth)}
-              className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-slate-300 hover:shadow-md transition-all cursor-pointer group"
+              onKeyDown={(e) => e.key === 'Enter' && openLedger(auth)}
+              tabIndex={0}
+              className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-slate-300 hover:shadow-md transition-all cursor-pointer group focus:ring-2 focus:ring-blue-500 outline-none"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-slate-100 rounded-md overflow-hidden relative border border-slate-100">
@@ -99,10 +102,10 @@ export function AuthorityDirectory({ compact, selectedZip }: AuthorityDirectoryP
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t('authorityDirectory')}</h2>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">{t('authorityDirectory')}</h1>
           {selectedZip && (
-            <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black rounded-full uppercase tracking-tighter shadow-sm border border-emerald-200">
-              Filtered by: {selectedZip}
+            <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black rounded-full uppercase tracking-tighter shadow-sm border border-emerald-200" role="status">
+              Filtered by Area: {selectedZip}
             </span>
           )}
         </div>
@@ -129,7 +132,7 @@ export function AuthorityDirectory({ compact, selectedZip }: AuthorityDirectoryP
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <h3 className="text-lg font-black text-slate-900">{auth.name}</h3>
+                  <h2 className="text-lg font-black text-slate-900">{auth.name}</h2>
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 </div>
                 <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-2">{auth.department}</p>

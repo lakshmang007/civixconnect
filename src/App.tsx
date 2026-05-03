@@ -35,7 +35,7 @@ export default function App() {
   const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'Feed' | 'Authorities' | 'My Issues' | 'Voting'>('Feed');
+  const [activeTab, setActiveTab] = useState<'Feed' | 'Authorities' | 'My Issues' | 'Voting'>('Voting');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedZip, setSelectedZip] = useState<string>('');

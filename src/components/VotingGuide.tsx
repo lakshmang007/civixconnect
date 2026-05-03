@@ -152,16 +152,24 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
         <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm overflow-x-auto no-scrollbar">
           <div className="flex items-center justify-between min-w-[800px] relative">
             {/* Connection Line */}
-            <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 z-0" />
+            <div className="absolute top-6 left-0 w-full h-[2px] bg-slate-100 z-0" />
             
             {electionRoadmap.map((item, idx) => (
-              <div key={item.title} className="relative z-10 flex flex-col items-center gap-4 px-4 bg-white">
-                <div className={cn(
-                  "w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg transition-all",
-                  item.status === 'completed' ? "bg-emerald-500 text-white shadow-emerald-500/20" : 
-                  item.status === 'active' ? "bg-blue-600 text-white shadow-blue-600/20 scale-110" : 
-                  "bg-slate-50 text-slate-400 border border-slate-100"
-                )}>
+              <div 
+                key={item.title} 
+                className="relative z-10 flex flex-col items-center gap-4 px-4 bg-white"
+                role="listitem"
+                aria-label={`${item.title} phase on ${item.date}, status is ${item.status}`}
+              >
+                <div 
+                  className={cn(
+                    "w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg transition-all",
+                    item.status === 'completed' ? "bg-emerald-500 text-white shadow-emerald-500/20" : 
+                    item.status === 'active' ? "bg-blue-600 text-white shadow-blue-600/20 scale-110" : 
+                    "bg-slate-50 text-slate-400 border border-slate-100"
+                  )}
+                  aria-hidden="true"
+                >
                   {item.icon}
                 </div>
                 <div className="text-center">
@@ -224,8 +232,12 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
                 <div 
                   key={step.key} 
                   onClick={() => toggleStep(step.key)}
+                  onKeyDown={(e) => e.key === 'Enter' && toggleStep(step.key)}
+                  tabIndex={0}
+                  role="checkbox"
+                  aria-checked={completedSteps.has(step.key)}
                   className={cn(
-                    "p-6 flex items-start gap-5 cursor-pointer transition-all hover:bg-slate-50/50",
+                    "p-6 flex items-start gap-5 cursor-pointer transition-all hover:bg-slate-50/50 outline-none focus:bg-slate-50",
                     completedSteps.has(step.key) && "bg-emerald-50/30"
                   )}
                 >
@@ -263,8 +275,12 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
                 <div 
                   key={step.key} 
                   onClick={() => toggleStep(step.key)}
+                  onKeyDown={(e) => e.key === 'Enter' && toggleStep(step.key)}
+                  tabIndex={0}
+                  role="checkbox"
+                  aria-checked={completedSteps.has(step.key)}
                   className={cn(
-                    "p-6 flex items-start gap-5 cursor-pointer transition-all hover:bg-slate-50/50",
+                    "p-6 flex items-start gap-5 cursor-pointer transition-all hover:bg-slate-50/50 outline-none focus:bg-slate-50",
                     completedSteps.has(step.key) && "bg-emerald-50/30"
                   )}
                 >

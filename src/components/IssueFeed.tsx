@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { User } from 'firebase/auth';
 import { issueService } from '../services/issueService';
 import { Issue } from '../types';
@@ -23,26 +23,30 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
 
   useEffect(() => {
     const unsubscribe = issueService.subscribeToIssues((data) => {
-      let processed = [...data];
-      
-      // Filter
-      if (filterUserId) {
-        processed = processed.filter(i => i.userId === filterUserId);
-      }
-      
-      // Sort
-      if (sortBy === 'latest') {
-        processed.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      } else {
-        processed.sort((a, b) => b.votesCount - a.votesCount);
-      }
-
-      setIssues(processed);
+      setIssues(data);
       setLoading(false);
     }, { zipCode });
 
     return () => unsubscribe();
-  }, [filterUserId, zipCode, sortBy]);
+  }, [zipCode]);
+
+  const processedIssues = useMemo(() => {
+    let result = [...issues];
+    
+    // Filter
+    if (filterUserId) {
+      result = result.filter(i => i.userId === filterUserId);
+    }
+    
+    // Sort
+    if (sortBy === 'latest') {
+      result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    } else {
+      result.sort((a, b) => b.votesCount - a.votesCount);
+    }
+
+    return result;
+  }, [issues, filterUserId, sortBy]);
 
   if (loading) {
     return (
@@ -105,10 +109,10 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
         </div>
       </div>
 
-      {issues.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 border-dashed">
+      {processedIssues.length === 0 ? (
+        <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 border-dashed" role="status">
           <div className="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-            <Plus className="w-10 h-10" />
+            <Plus className="w-10 h-10" aria-hidden="true" />
           </div>
           <h3 className="text-xl font-black text-slate-900 leading-tight uppercase tracking-tight">{filterUserId ? "No Reports Yet" : t('noIssues')}</h3>
           <p className="text-slate-500 text-sm font-medium mt-2 max-w-xs mx-auto">
@@ -120,15 +124,16 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
             <button 
               onClick={onCreateClick}
               className="mt-8 px-8 py-3 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+              aria-label="Report your first issue"
             >
               Report First Issue
             </button>
           )}
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-6" role="feed" aria-busy="false">
           <AnimatePresence>
-            {issues.map((issue) => (
+            {processedIssues.map((issue) => (
               <motion.div
                 key={issue.id}
                 layout
@@ -136,6 +141,7 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
+                role="article"
               >
                 <IssueCard 
                   issue={issue} 

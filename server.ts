@@ -31,7 +31,30 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  // Security Middleware
+  app.use(express.json({ limit: '10kb' })); 
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+  });
+
+  // Mock Rate Limiting
+  const rateLimitMap = new Map<string, { count: number, reset: number }>();
+  app.use((req, res, next) => {
+    const ip = req.ip || 'unknown';
+    const now = Date.now();
+    const limitData = rateLimitMap.get(ip);
+    
+    if (limitData && now < limitData.reset) {
+      if (limitData.count > 100) return res.status(429).json({ error: "Too many requests" });
+      limitData.count++;
+    } else {
+      rateLimitMap.set(ip, { count: 1, reset: now + 60000 });
+    }
+    next();
+  });
 
   // API routes
   app.get("/api/health", (req, res) => {
