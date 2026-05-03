@@ -66,6 +66,8 @@ export function Header({ user, onFilterChange, onMenuClick, onNotificationClick 
             <button
               key={lang}
               onClick={() => setLanguage(lang)}
+              aria-pressed={language === lang}
+              aria-label={`Switch language to ${lang === 'en' ? 'English' : lang === 'kn' ? 'Kannada' : 'Hindi'}`}
               className={`px-2.5 py-1 text-[10px] font-bold rounded-lg transition-all uppercase ${
                 language === lang 
                   ? "bg-white text-blue-600 shadow-sm" 
@@ -77,8 +79,8 @@ export function Header({ user, onFilterChange, onMenuClick, onNotificationClick 
           ))}
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
-          <MapPin className="w-3 h-3" />
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider" role="status">
+          <MapPin className="w-3 h-3" aria-hidden="true" />
           {selectedZip ? `${t('area')}: ${selectedZip}` : `Shivajinagar (560001)`}
         </div>
         <button 
@@ -87,15 +89,19 @@ export function Header({ user, onFilterChange, onMenuClick, onNotificationClick 
           className="relative p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
         >
           <Bell className="w-5 h-5" aria-hidden="true" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white ring-2 ring-red-500/20 animate-pulse"></span>
+          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white ring-2 ring-red-500/20 animate-pulse" aria-hidden="true"></span>
+          <span className="sr-only">New Notification</span>
         </button>
 
         <div className="lg:hidden flex items-center shrink-0">
           <img 
              src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=random`}
-             alt="User Profile"
-             className="w-8 h-8 rounded-full border border-slate-200 shadow-sm"
+             alt={`Profile of ${user.displayName}`}
+             className="w-8 h-8 rounded-full border border-slate-200 shadow-sm cursor-pointer"
+             role="button"
+             tabIndex={0}
              onClick={onMenuClick}
+             onKeyDown={(e) => e.key === 'Enter' && onMenuClick()}
           />
         </div>
       </div>

@@ -12,14 +12,14 @@ interface Translations {
 
 export const translations: Translations = {
   // App Name
-  appName: { en: 'CivixConnect', kn: 'ಸಿವಿಕ್ಸ್ ಕನೆಕ್ಟ್', hi: 'सिविक्स कनेक्ट' },
-  appTagline: { en: 'Civic engagement platform', kn: 'ನಾಗರಿಕ ಸಹಭಾಗಿತ್ವ ವೇದಿಕೆ', hi: 'नागरिक जुड़ाव मंच' },
+  appName: { en: 'Civix Election AI', kn: 'ಸಿವಿಕ್ಸ್ ಎಲೆಕ್ಷನ್ AI', hi: 'सिविक्स इलेक्शन AI' },
+  appTagline: { en: 'AI-Powered Election Assistant', kn: 'AI-ಚಾಲಿತ ಚುನಾವಣಾ ಸಹಾಯಕ', hi: 'AI-संचालित चुनाव सहायक' },
   
   // Sidebar
   communityFeed: { en: 'Community Feed', kn: 'ಸಮುದಾಯ ಫೀಡ್', hi: 'सामुदायिक फ़ीड' },
   authorityDirectory: { en: 'Authority Directory', kn: 'ಅಧಿಕಾರಿಗಳ ವಿವರ', hi: 'प्राधिकारी निर्देशिका' },
   myIssues: { en: 'My Reported Issues', kn: 'ನನ್ನ ದೂರುಗಳು', hi: 'मेरी समस्याएँ' },
-  voterGuide: { en: 'Voter Guide', kn: 'ಮತದಾರರ ಮಾರ್ಗದರ್ಶಿ', hi: 'मतदाता मार्गदर्शिका' },
+  voterGuide: { en: 'Election Center', kn: 'ಚುನಾವಣಾ ಕೇಂದ್ರ', hi: 'चुनाव केंद्र' },
   terminateSession: { en: 'Terminate Session', kn: 'ಸೈನ್ ಔಟ್ ಮಾಡಿ', hi: 'सत्र समाप्त करें' },
   zip: { en: 'Zip', kn: 'ಪಿನ್ ಕೋಡ್', hi: 'पिन कोड' },
 
@@ -43,7 +43,7 @@ export const translations: Translations = {
   aiEscalation: { en: 'AI Escalation Success', kn: 'AI ಸಫಲವಾಗಿದೆ', hi: 'AI इज़ाफ़ा सफल' },
 
   // Modal
-  reportIssue: { en: 'Report a Community Issue', kn: 'ಸಾರ್ವಜನಿಕ ಸಮಸ್ಯೆ ವರದಿ ಮಾಡಿ', hi: 'सामुदायिक समस्या की रिपोर्ट करें' },
+  reportIssue: { en: 'Get Election Support', kn: 'ಚುನಾವಣಾ ಬೆಂಬಲ ಪಡೆಯಿರಿ', hi: 'चुनाव सहायता प्राप्त करें' },
   uploadDetails: { en: 'Upload Details & Photos', kn: 'ವಿವರಗಳು ಮತ್ತು ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', hi: 'विवरण और फोटो अपलोड करें' },
   uploadFromDevice: { en: 'Upload from Device', kn: 'ಸಾಧನದಿಂದ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', hi: 'डिवाइस से अपलोड करें' },
   imageAttached: { en: 'Image Attached', kn: 'ಚಿತ್ರ ಲಗತ್ತಿಸಲಾಗಿದೆ', hi: 'छवि संलग्न है' },
@@ -59,7 +59,7 @@ export const translations: Translations = {
   resolutionLedger: { en: 'Resolution Ledger', kn: 'ರೆಸಲ್ಯೂಶನ್ ಲೆಡ್ಜರ್', hi: 'समाधान बही' },
 
   // Voting Guide
-  votingGuide: { en: 'Voter Registration Guide', kn: 'ಮತದಾನದ ನೋಂದಣಿ ಮಾರ್ಗದರ್ಶಿ', hi: 'मतदाता पंजीकरण मार्गदर्शिका' },
+  votingGuide: { en: 'Election Center', kn: 'ಚುನಾವಣಾ ಕೇಂದ್ರ', hi: 'चुनाव केंद्र' },
   guideStep1: { en: 'Check name in Electoral Roll', kn: 'ಮತದಾರರ ಪಟ್ಟಿಯಲ್ಲಿ ಹೆಸರನ್ನು ಪರಿಶೀಲಿಸಿ', hi: 'मतदाता सूची में नाम जांचें' },
   guideStep2: { en: 'Register using Form 6 if new', kn: 'ಹೊಸಬರಾಗಿದ್ದರೆ ಫಾರ್ಮ್ 6 ಬಳಸಿ ನೋಂದಾಯಿಸಿ', hi: 'नये होने पर फॉर्म 6 का उपयोग करके पंजीकरण करें' },
   guideStep3: { en: 'Locate your polling booth', kn: 'ನಿಮ್ಮ ಮತದಾನ ಕೇಂದ್ರವನ್ನು ಗುರುತಿಸಿ', hi: 'अपने मतदान केंद्र का पता लगाएं' },
@@ -89,8 +89,8 @@ export const translations: Translations = {
   voterDisclaimer: { en: 'Information based on ECI guidelines. Please verify on official channels.', kn: 'ECI ಮಾರ್ಗಸೂಚಿಗಳ ಆಧಾರದ ಮೇಲೆ ಮಾಹಿತಿ. ದಯವಿಟ್ಟು ಅಧಿಕೃತ ಚಾನಲ್‌ಗಳಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.', hi: 'ईसीआई दिशानिर्देशों पर आधारित जानकारी। कृपया आधिकारिक चैनलों पर सत्यापित करें।' },
 
   // Chat
-  civicAssistant: { en: 'Civic Assistant', kn: 'ನಾಗರಿಕ ಸಹಾಯಕ', hi: 'नागरिक सहायक' },
-  chatPlaceholder: { en: 'Ask about civic issues...', kn: 'ಸಾರ್ವಜನಿಕ ಸಮಸ್ಯೆಗಳ ಬಗ್ಗೆ ಕೇಳಿ...', hi: 'नागरिक समस्याओं के बारे में पूछें...' },
+  civicAssistant: { en: 'Election AI Expert', kn: 'ಚುನಾವಣಾ AI ತಜ್ಞ', hi: 'चुनाव AI विशेषज्ञ' },
+  chatPlaceholder: { en: 'Ask about voting or election process...', kn: 'ಮತದಾನ ಅಥವಾ ಚುನಾವಣಾ ಪ್ರಕ್ರಿಯೆಯ ಬಗ್ಗೆ ಕೇಳಿ...', hi: 'मतदान या चुनाव प्रक्रिया के बारे में पूछें...' },
   voiceActive: { en: 'Listening...', kn: 'ಕೇಳಿಸಿಕೊಳ್ಳುತ್ತಿದೆ...', hi: 'सुन रहा है...' },
   aiTyping: { en: 'Assistant is thinking...', kn: 'ಸಹಾಯಕ ಯೋಚಿಸುತ್ತಿದ್ದಾನೆ...', hi: 'सहायक सोच रहा है...' },
 };

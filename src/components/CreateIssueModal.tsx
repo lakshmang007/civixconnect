@@ -13,7 +13,7 @@ import { useLanguage } from '../lib/LanguageContext';
 const issueSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(100),
   description: z.string().min(20, "Description must be at least 20 characters").max(2000),
-  category: z.enum(['Waste', 'Pothole', 'Water', 'Electricity', 'Other']),
+  category: z.enum(['Booth', 'Roll', 'Process', 'ID', 'Other']),
   zipCode: z.string().min(1, "Zip Code is required"),
   imageUrl: z.string().optional().or(z.literal('')),
 });
@@ -35,7 +35,8 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
   const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<IssueFormData>({
     resolver: zodResolver(issueSchema),
     defaultValues: {
-      imageUrl: ''
+      imageUrl: '',
+      category: 'Booth'
     }
   });
 
@@ -61,18 +62,13 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
 
     // Decreased to 500KB to stay well within 1MB Firestore limit after Base64 encoding (~33% overhead)
     if (file.size > 500000) { 
-      alert("Image is too large. Please select a photo smaller than 500KB for faster processing.");
+      console.warn("Image too large:", file.size);
       return;
     }
 
     const reader = new FileReader();
-    reader.onloadstart = () => console.log("Started reading file...");
-    reader.onerror = () => console.error("FileReader error");
     reader.onloadend = () => {
       const base64String = reader.result as string;
-      console.log("File read successfully, base64 length:", base64String.length);
-      
-      // Use a timeout to ensure state update doesn't conflict with any browser-level file handling
       setTimeout(() => {
         setValue('imageUrl', base64String, { 
           shouldValidate: true, 
@@ -82,8 +78,6 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
       }, 0);
     };
     reader.readAsDataURL(file);
-    
-    // Reset the input so the same file can be selected again if needed
     e.target.value = '';
   };
 
@@ -111,8 +105,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
             isGuestMode
           })
         });
-        if ((window as any).notifyEmail) (window as any).notifyEmail('studylucky4@gmail.com', `New Submission: "${data.title}"`);
-        console.log("Submission notification triggered for studylucky4@gmail.com");
+        if ((window as any).notifyEmail) (window as any).notifyEmail('studylucky4@gmail.com', `New Election Support Request: "${data.title}"`);
       } catch (e) {
         console.error("Email trigger failed:", e);
       }
@@ -121,12 +114,6 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
       onClose();
     } catch (error) {
       console.error("Failed to create issue:", error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      if (errorMessage.includes('too large') || errorMessage.includes('1,048,576')) {
-        alert("The report is too large to submit. Please use a smaller image (under 500KB).");
-      } else {
-        alert("Submission failed. Please check your internet connection and try again.");
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -153,7 +140,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-xl bg-white rounded-3xl sm:rounded-3xl shadow-2xl overflow-hidden shadow-emerald-500/10 max-h-[90vh] sm:max-h-none flex flex-col"
+            className="relative w-full max-w-xl bg-white rounded-3xl sm:rounded-3xl shadow-2xl overflow-hidden shadow-blue-500/10 max-h-[90vh] sm:max-h-none flex flex-col"
           >
             <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between shrink-0">
               <h2 id="modal-title" className="text-xl font-bold text-slate-900">{t('reportIssue')}</h2>
@@ -177,40 +164,44 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                         <div className="relative group">
                           <input 
                             {...register('imageUrl')}
+                            aria-label="Image URL"
                             placeholder="Paste image URL or upload below..." 
                             className={cn(
                               "w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm outline-none transition-all pr-12 font-medium",
-                              errors.imageUrl ? "border-red-500 focus:ring-red-500/20" : "border-slate-200 focus:ring-emerald-500/20 focus:border-emerald-500"
+                              errors.imageUrl ? "border-red-500 focus:ring-red-500/20" : "border-slate-200 focus:ring-blue-500/20 focus:border-blue-500"
                             )}
                           />
                           {imageUrl && (
                             <button
                               type="button"
                               onClick={() => setValue('imageUrl', '', { shouldValidate: true })}
+                              aria-label="Clear Image"
                               className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 bg-slate-200 hover:bg-slate-300 rounded-full transition-colors"
                             >
                               <X className="w-3 h-3 text-slate-600" />
                             </button>
                           )}
                         </div>
-                        {errors.imageUrl && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.imageUrl.message}</p>}
+                        {errors.imageUrl && <p className="text-[10px] text-red-500 font-bold ml-1" role="alert">{errors.imageUrl.message}</p>}
                       </div>
                       
                       {imageUrl ? (
-                        <motion.div 
+                        <motion.button 
+                          type="button"
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="w-14 h-14 rounded-xl border-2 border-emerald-500 overflow-hidden shrink-0 shadow-lg relative group cursor-pointer"
+                          className="w-14 h-14 rounded-xl border-2 border-blue-500 overflow-hidden shrink-0 shadow-lg relative group cursor-pointer"
                           onClick={() => setShowFullPreview(true)}
+                          aria-label="View Image Full Size"
                         >
-                          <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors" />
-                          <div className="absolute top-0 right-0 p-0.5 bg-emerald-500 rounded-bl-lg shadow-sm">
+                          <img src={imageUrl} alt="Document Preview" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors" />
+                          <div className="absolute top-0 right-0 p-0.5 bg-blue-500 rounded-bl-lg shadow-sm">
                             <CheckCircle2 className="w-3 h-3 text-white" />
                           </div>
-                        </motion.div>
+                        </motion.button>
                       ) : (
-                        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center bg-slate-50 shrink-0">
+                        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center bg-slate-50 shrink-0" aria-hidden="true">
                           <Camera className="w-5 h-5 text-slate-300" />
                         </div>
                       )}
@@ -221,26 +212,27 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                         className={cn(
                           "py-3 px-4 rounded-xl text-[10px] font-black transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm uppercase tracking-widest cursor-pointer hover:opacity-90",
                           imageUrl
-                            ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                            ? "bg-blue-100 text-blue-700 border border-blue-200"
                             : "bg-slate-900 text-white shadow-slate-200"
                         )}
                       >
-                        <Upload className="w-3.5 h-3.5" />
+                        <Upload className="w-3.5 h-3.5" aria-hidden="true" />
                         {imageUrl ? "Change Photo" : t('uploadFromDevice')}
                         <input 
                           type="file" 
                           accept="image/jpeg,image/png,image/webp" 
                           className="hidden" 
                           onChange={handleFileUpload}
+                          aria-label="Upload document photo"
                         />
                       </label>
                       
                       <button 
                         type="button" 
-                        onClick={() => setValue('imageUrl', 'https://images.unsplash.com/photo-1594498653385-d5172b532c00?q=80&w=640&auto=format&fit=crop', { shouldValidate: true, shouldDirty: true })}
+                        onClick={() => setValue('imageUrl', 'https://images.unsplash.com/photo-1540910419892-f7ef7173fdd4?q=80&w=640&auto=format&fit=crop', { shouldValidate: true, shouldDirty: true })}
                         className="py-3 px-4 bg-slate-100 hover:bg-slate-200 rounded-xl text-[10px] font-black text-slate-600 transition-all active:scale-95 flex items-center justify-center gap-2 uppercase tracking-widest"
                       >
-                        <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
                         {t('samplePhoto')}
                       </button>
                     </div>
@@ -249,18 +241,19 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                       <motion.div 
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
+                        role="status"
                         className="p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between"
                       >
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                          <span className="text-[10px] font-black text-blue-700 uppercase tracking-tight">Image processed successfully</span>
+                          <span className="text-[10px] font-black text-blue-700 uppercase tracking-tight">Support image attached</span>
                         </div>
                         <button 
                           type="button"
                           onClick={() => setShowFullPreview(true)}
                           className="text-[10px] font-black text-blue-600 hover:underline uppercase"
                         >
-                          View Full Size
+                          Show Preview
                         </button>
                       </motion.div>
                     )}
@@ -272,13 +265,13 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                   <select 
                     id="issue-category"
                     {...register('category')}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                   >
-                    <option value="Waste">Waste / Sanitation</option>
-                    <option value="Pothole">Pothole / Road Repair</option>
-                    <option value="Water">Water Leak / Shortage</option>
-                    <option value="Electricity">Electricity / Street Lights</option>
-                    <option value="Other">Other Issues</option>
+                    <option value="Booth">Polling Booth / Queue Issue</option>
+                    <option value="Roll">Electoral Roll Discrepancy</option>
+                    <option value="Process">Election Process Query</option>
+                    <option value="ID">ID Verification Help</option>
+                    <option value="Other">Other Election Concerns</option>
                   </select>
                 </div>
 
@@ -288,7 +281,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                     id="issue-zip"
                     {...register('zipCode')}
                     className={cn(
-                      "w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all",
+                      "w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all",
                       errors.zipCode ? "border-red-500 focus:ring-red-500/20" : "border-slate-200"
                     )}
                   >
@@ -297,7 +290,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                       <option key={zip.code} value={zip.code}>{zip.name} ({zip.code})</option>
                     ))}
                   </select>
-                  {errors.zipCode && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.zipCode.message}</p>}
+                  {errors.zipCode && <p className="text-[10px] text-red-500 font-bold ml-1" role="alert">{errors.zipCode.message}</p>}
                 </div>
 
                 <div className="space-y-1">
@@ -305,13 +298,13 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                   <input 
                     id="issue-title"
                     {...register('title')}
-                    placeholder="Briefly describe the problem (e.g. Broken streetlight on 4th Ave)" 
+                    placeholder="Briefly state your concern (e.g. Long queue at Booth #12)" 
                     className={cn(
                       "w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm outline-none transition-all",
-                      errors.title ? "border-red-500 focus:ring-red-500/20" : "border-slate-200 focus:ring-emerald-500/20 focus:border-emerald-500"
+                      errors.title ? "border-red-500 focus:ring-red-500/20" : "border-slate-200 focus:ring-blue-500/20 focus:border-blue-500"
                     )}
                   />
-                  {errors.title && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.title.message}</p>}
+                  {errors.title && <p className="text-[10px] text-red-500 font-bold ml-1" role="alert">{errors.title.message}</p>}
                 </div>
 
                 <div className="space-y-1">
@@ -320,34 +313,34 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                     id="issue-desc"
                     {...register('description')}
                     rows={4}
-                    placeholder="What's the exact location? How long has this been happening?" 
+                    placeholder="Provide details for AI verification and escalation..." 
                     className={cn(
                       "w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm outline-none transition-all resize-none",
-                      errors.description ? "border-red-500 focus:ring-red-500/20" : "border-slate-200 focus:ring-emerald-500/20 focus:border-emerald-500"
+                      errors.description ? "border-red-500 focus:ring-red-500/20" : "border-slate-200 focus:ring-blue-500/20 focus:border-blue-500"
                     )}
                   />
-                  {errors.description && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.description.message}</p>}
+                  {errors.description && <p className="text-[10px] text-red-500 font-bold ml-1" role="alert">{errors.description.message}</p>}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                <MapPin className="w-4 h-4 text-emerald-600" />
-                <span className="text-xs font-semibold text-slate-600 tracking-tight">Geo-tag: 12.9716° N, 77.5946° E (Auto-detected)</span>
+              <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100" role="status">
+                <MapPin className="w-4 h-4 text-blue-600" aria-hidden="true" />
+                <span className="text-xs font-semibold text-slate-600 tracking-tight">Booth Geo-tag: 12.9716° N, 77.5946° E</span>
               </div>
 
               <button 
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-70"
+                className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-70"
               >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="animate-pulse">Processing...</span>
+            <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+            <span className="animate-pulse">Verifying...</span>
           </>
         ) : (
           <>
-            <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
             {t('submit')}
           </>
         )}

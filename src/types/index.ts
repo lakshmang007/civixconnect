@@ -4,7 +4,7 @@ export enum IssueStatus {
   RESOLVED = 'Resolved'
 }
 
-export type Category = 'Waste' | 'Pothole' | 'Water' | 'Electricity' | 'Other';
+export type Category = 'Booth' | 'Roll' | 'Process' | 'ID' | 'Other';
 
 export interface Issue {
   id: string;

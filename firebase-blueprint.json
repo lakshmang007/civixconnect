@@ -1,13 +1,13 @@
 {
   "entities": {
     "Issue": {
-      "title": "Civic Issue",
-      "description": "An issue reported by a citizen",
+      "title": "Election Support Request",
+      "description": "A verification or support request reported by a citizen",
       "type": "object",
       "properties": {
         "title": { "type": "string" },
         "description": { "type": "string" },
-        "category": { "type": "string", "enum": ["Waste", "Pothole", "Water", "Electricity", "Other"] },
+        "category": { "type": "string", "enum": ["Booth", "Roll", "Process", "ID", "Other"] },
         "location": { "type": "object", "description": "Geo-tagged location" },
         "status": { "type": "string", "enum": ["Community Poll", "Escalated to Authority", "Resolved"] },
         "votesCount": { "type": "integer" },

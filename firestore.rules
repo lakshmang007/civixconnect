@@ -28,7 +28,7 @@ service cloud.firestore {
       return data.keys().hasAll(['title', 'description', 'category', 'status', 'votesCount', 'createdAt', 'updatedAt', 'userId', 'zipCode'])
         && data.title is string && data.title.size() <= 200
         && data.description is string && data.description.size() <= 2000
-        && data.category in ['Waste', 'Pothole', 'Water', 'Electricity', 'Other']
+        && data.category in ['Booth', 'Roll', 'Process', 'ID', 'Other']
         && data.status in ['Community Poll', 'Escalated to Authority', 'Resolved']
         && data.votesCount is int
         && data.zipCode is string && data.zipCode.size() <= 10

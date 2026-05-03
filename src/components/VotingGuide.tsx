@@ -77,6 +77,13 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
     setCompletedSteps(next);
   };
 
+  const faqs = [
+    { q: "What if I don't have a Voter ID card?", a: "You can still vote using any of the 12 alternate photo identity documents accepted by the ECI, provided your name is in the electoral roll." },
+    { q: "Can I register to vote online?", a: "Yes, you can use the NVSP portal (voters.eci.gov.in) or the Voter Helpline App to register or update your details." },
+    { q: "How to find my polling station?", a: "Visit electoralsearch.eci.gov.in and enter your EPIC number or personal details to find your designated booth." },
+    { q: "What is VVPAT?", a: "Voter Verifiable Paper Audit Trail (VVPAT) allows you to verify that your vote was cast correctly via a printed slip visible for 7 seconds." }
+  ];
+
   if (!fullView) {
     return (
       <div className="bg-white rounded-xl border border-slate-100 p-5 shadow-sm">
@@ -366,6 +373,17 @@ export function VotingGuide({ fullView }: VotingGuideProps) {
              <button className="w-full py-2.5 bg-white border border-slate-200 hover:border-blue-300 hover:text-blue-600 rounded-xl text-xs font-black transition-all">
                 Visit official Portal
              </button>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="space-y-4">
+            <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Expert AI Insights</h4>
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm border-l-4 border-l-blue-600">
+                <p className="text-xs font-black text-slate-900 mb-1">{faq.q}</p>
+                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{faq.a}</p>
+              </div>
+            ))}
           </div>
 
         </div>

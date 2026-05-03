@@ -63,30 +63,35 @@ export function Sidebar({ activeTab, setActiveTab, user, selectedZip, isOpen, on
         )}
       </AnimatePresence>
 
-      <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 flex flex-col w-72 lg:w-64 bg-white border-r border-slate-200 transition-transform duration-300 lg:translate-x-0",
-        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      )}>
+      <aside 
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex flex-col w-72 lg:w-64 bg-white border-r border-slate-200 transition-transform duration-300 lg:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+        aria-label="Primary Navigation"
+      >
         <div className="p-6 border-b border-slate-50 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm">
-              CX
+            <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm" aria-hidden="true">
+              CA
             </div>
             <span className="text-xl font-bold tracking-tight text-blue-700">{t('appName')}</span>
           </div>
           <button 
             onClick={onClose}
+            aria-label="Close Sidebar"
             className="lg:hidden p-2 text-slate-400 hover:text-slate-900 transition-colors"
           >
-            <LogOut className="w-5 h-5 rotate-180" />
+            <LogOut className="w-5 h-5 rotate-180" aria-hidden="true" />
           </button>
         </div>
 
-        <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto no-scrollbar">
-          <div className="space-y-1">
+        <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto no-scrollbar" aria-label="Main Menu">
+          <div className="space-y-1" role="list">
             {menuItems.map((item) => (
               <button
                 key={item.id}
+                role="listitem"
                 onClick={() => handleTabClick(item.id)}
                 aria-current={activeTab === item.id ? 'page' : undefined}
                 className={cn(
@@ -99,7 +104,7 @@ export function Sidebar({ activeTab, setActiveTab, user, selectedZip, isOpen, on
               <item.icon className={cn(
                 "w-4 h-4",
                 activeTab === item.id ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"
-              )} />
+              )} aria-hidden="true" />
               <span>{item.label}</span>
             </button>
           ))}
