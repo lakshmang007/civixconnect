@@ -8,7 +8,7 @@ import { Filter, Plus } from 'lucide-react';
 import { useLanguage } from '../lib/LanguageContext';
 
 interface IssueFeedProps {
-  user: User | null;
+  user: User;
   filterUserId?: string;
   zipCode?: string;
   onCreateClick?: () => void;

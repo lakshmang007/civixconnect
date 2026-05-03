@@ -19,7 +19,7 @@ import {
   Mail,
   X
 } from 'lucide-react';
-import { auth } from './lib/firebase';
+import { auth, signInWithGoogle } from './lib/firebase';
 import { onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { IssueFeed } from './components/IssueFeed';
 import { AuthorityDirectory } from './components/AuthorityDirectory';
@@ -59,10 +59,10 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      setLoading(false);
+      setLoading(loading => false);
       
-      if (u || !u) {
-        // Seed data for demo - initialize regardless of auth state
+      if (u) {
+        // Seed data for demo only when signed in
         issueService.seedZipCodes();
         issueService.seedAuthorities();
       }
@@ -70,6 +70,45 @@ export default function App() {
 
     return () => unsubscribe();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-50">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+          className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full"
+        />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-md w-full bg-white p-8 rounded-2xl shadow-xl border border-slate-200"
+        >
+          <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <ShieldCheck className="w-10 h-10" />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">{t('appName')}</h1>
+          <p className="text-slate-600 mb-8 font-medium">
+            Empowering neighbors to validate, prioritize, and escalate community issues with transparency.
+          </p>
+          <button
+            onClick={signInWithGoogle}
+            className="w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 py-3 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
+          >
+            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 shadow-sm" />
+            Continue with Google
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex bg-slate-50 min-h-screen font-sans text-slate-900 overflow-hidden relative">
@@ -131,7 +170,7 @@ export default function App() {
                 >
                   {activeTab === 'Feed' && <IssueFeed user={user} zipCode={selectedZip} />}
                   {activeTab === 'Authorities' && <AuthorityDirectory selectedZip={selectedZip} />}
-                  {activeTab === 'My Issues' && <IssueFeed user={user} filterUserId={user?.uid} zipCode={selectedZip} onCreateClick={() => setIsModalOpen(true)} />}
+                  {activeTab === 'My Issues' && <IssueFeed user={user} filterUserId={user.uid} zipCode={selectedZip} onCreateClick={() => setIsModalOpen(true)} />}
                   {activeTab === 'Voting' && <VotingGuide fullView />}
                 </motion.div>
               </AnimatePresence>

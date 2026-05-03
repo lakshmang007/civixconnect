@@ -23,7 +23,7 @@ type IssueFormData = z.infer<typeof issueSchema>;
 interface CreateIssueModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: User | null;
+  user: User;
 }
 
 export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProps) {
@@ -94,7 +94,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
       
       await issueService.createIssue({
         ...data,
-        userId: user?.uid || 'anonymous_user',
+        userId: user.uid,
         location: { lat: 0, lng: 0 }, // For demo
       });
 
@@ -105,7 +105,7 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             title: data.title,
-            userName: user?.displayName || 'Citizen',
+            userName: user.displayName || 'Citizen',
             category: data.category,
             zipCode: data.zipCode,
             isGuestMode
