@@ -135,13 +135,19 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            aria-hidden="true"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -150,9 +156,13 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
             className="relative w-full max-w-xl bg-white rounded-3xl sm:rounded-3xl shadow-2xl overflow-hidden shadow-emerald-500/10 max-h-[90vh] sm:max-h-none flex flex-col"
           >
             <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between shrink-0">
-              <h2 className="text-xl font-bold text-slate-900">{t('reportIssue')}</h2>
-              <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-xl text-slate-400">
-                <X className="w-5 h-5" />
+              <h2 id="modal-title" className="text-xl font-bold text-slate-900">{t('reportIssue')}</h2>
+              <button 
+                onClick={onClose} 
+                className="p-2 hover:bg-slate-50 rounded-xl text-slate-400"
+                aria-label="Close Modal"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -257,9 +267,10 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                   </div>
               </div>
 
-              <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase ml-1">{t('issueCategory')}</label>
+                <div className="space-y-1">
+                  <label htmlFor="issue-category" className="text-xs font-bold text-slate-500 uppercase ml-1">{t('issueCategory')}</label>
                   <select 
+                    id="issue-category"
                     {...register('category')}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
                   >
@@ -272,8 +283,9 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase ml-1">{t('locationZip')}</label>
+                  <label htmlFor="issue-zip" className="text-xs font-bold text-slate-500 uppercase ml-1">{t('locationZip')}</label>
                   <select 
+                    id="issue-zip"
                     {...register('zipCode')}
                     className={cn(
                       "w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all",
@@ -289,8 +301,9 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase ml-1">{t('headline')}</label>
+                  <label htmlFor="issue-title" className="text-xs font-bold text-slate-500 uppercase ml-1">{t('headline')}</label>
                   <input 
+                    id="issue-title"
                     {...register('title')}
                     placeholder="Briefly describe the problem (e.g. Broken streetlight on 4th Ave)" 
                     className={cn(
@@ -302,8 +315,9 @@ export function CreateIssueModal({ isOpen, onClose, user }: CreateIssueModalProp
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase ml-1">{t('detailsContext')}</label>
+                  <label htmlFor="issue-desc" className="text-xs font-bold text-slate-500 uppercase ml-1">{t('detailsContext')}</label>
                   <textarea 
+                    id="issue-desc"
                     {...register('description')}
                     rows={4}
                     placeholder="What's the exact location? How long has this been happening?" 

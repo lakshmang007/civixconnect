@@ -6,6 +6,7 @@ import { IssueCard } from './IssueCard';
 import { motion, AnimatePresence } from 'motion/react';
 import { Filter, Plus } from 'lucide-react';
 import { useLanguage } from '../lib/LanguageContext';
+import { cn } from '../lib/utils';
 
 interface IssueFeedProps {
   user: User;
@@ -18,19 +19,30 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
   const { t } = useLanguage();
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState<'latest' | 'trending'>('latest');
 
   useEffect(() => {
     const unsubscribe = issueService.subscribeToIssues((data) => {
-      let filtered = data;
+      let processed = [...data];
+      
+      // Filter
       if (filterUserId) {
-        filtered = data.filter(i => i.userId === filterUserId);
+        processed = processed.filter(i => i.userId === filterUserId);
       }
-      setIssues(filtered);
+      
+      // Sort
+      if (sortBy === 'latest') {
+        processed.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else {
+        processed.sort((a, b) => b.votesCount - a.votesCount);
+      }
+
+      setIssues(processed);
       setLoading(false);
     }, { zipCode });
 
     return () => unsubscribe();
-  }, [filterUserId, zipCode]);
+  }, [filterUserId, zipCode, sortBy]);
 
   if (loading) {
     return (
@@ -67,10 +79,26 @@ export function IssueFeed({ user, filterUserId, zipCode, onCreateClick }: IssueF
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold text-slate-800">{filterUserId ? "Your Submission History" : t('priorityFeed')}</h2>
         <div className="flex gap-2 text-xs">
-          <button className="px-3 py-1 bg-white border border-slate-200 rounded-md font-bold text-slate-600 hover:bg-slate-50 transition-all">
+          <button 
+            onClick={() => setSortBy('latest')}
+            className={cn(
+              "px-3 py-1 border rounded-md font-bold transition-all",
+              sortBy === 'latest' 
+                ? "bg-blue-700 text-white border-blue-700 shadow-sm shadow-blue-500/20" 
+                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+            )}
+          >
             {t('latest')}
           </button>
-          <button className="px-3 py-1 bg-blue-700 text-white rounded-md font-bold shadow-sm shadow-blue-500/20">
+          <button 
+            onClick={() => setSortBy('trending')}
+            className={cn(
+              "px-3 py-1 border rounded-md font-bold transition-all",
+              sortBy === 'trending' 
+                ? "bg-blue-700 text-white border-blue-700 shadow-sm shadow-blue-500/20" 
+                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+            )}
+          >
             {t('trending')}
           </button>
         </div>

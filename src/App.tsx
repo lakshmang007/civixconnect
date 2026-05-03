@@ -111,7 +111,13 @@ export default function App() {
   }
 
   return (
-    <div className="flex bg-slate-50 min-h-screen font-sans text-slate-900 overflow-hidden relative">
+    <div className="flex bg-slate-50 min-h-screen font-sans text-slate-900 overflow-hidden relative selection:bg-blue-100 selection:text-blue-900">
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only fixed top-4 left-4 z-[200] bg-blue-700 text-white px-4 py-2 rounded-xl font-bold border-2 border-white shadow-2xl focus:ring-4 focus:ring-blue-500/50"
+      >
+        Skip to content
+      </a>
       <AnimatePresence>
         <div className="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
           {notifications.map(n => (
@@ -157,7 +163,7 @@ export default function App() {
           onNotificationClick={() => addNotification('System Status: All services operational. 0 unread alerts.', 'info')}
         />
         
-        <main className="flex-1 p-4 sm:p-6 overflow-hidden">
+        <main id="main-content" className="flex-1 p-4 sm:p-6 overflow-hidden">
           <div className="grid grid-cols-12 gap-6 h-full overflow-hidden">
             <section className="col-span-12 xl:col-span-8 flex flex-col h-full overflow-y-auto no-scrollbar pb-32 lg:pb-24">
               <AnimatePresence mode="wait">

@@ -51,7 +51,7 @@ export function SmartElectionBot({ user, zipCode }: SmartElectionBotProps) {
   
   const initialBotMessage: Message = { 
     role: 'bot', 
-    text: `Welcome, ${user.displayName || 'Neighbor'}. To assist with your registration in ${zipCode || 'this area'}, please choose your preferred language:`,
+    text: `Hello, ${user.displayName || 'Citizen'}. I am your AI Civic Assistant, powered by Gemini. To help verify your registration or find polling details in Google Maps for ${zipCode || 'your area'}, please select your language:`,
     options: ['English', 'Kannada']
   };
 
@@ -378,7 +378,9 @@ export function SmartElectionBot({ user, zipCode }: SmartElectionBotProps) {
                 className="flex items-center gap-3"
               >
                 <div className="flex-1 relative flex items-center">
+                  <label htmlFor="bot-input" className="sr-only">Ask Election AI</label>
                   <input 
+                    id="bot-input"
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}

@@ -88,13 +88,14 @@ export function Sidebar({ activeTab, setActiveTab, user, selectedZip, isOpen, on
               <button
                 key={item.id}
                 onClick={() => handleTabClick(item.id)}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 group text-sm font-medium",
-                activeTab === item.id 
-                  ? "bg-blue-50 text-blue-700 shadow-sm" 
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              )}
-            >
+                aria-current={activeTab === item.id ? 'page' : undefined}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 group text-sm font-medium",
+                  activeTab === item.id 
+                    ? "bg-blue-50 text-blue-700 shadow-sm" 
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                )}
+              >
               <item.icon className={cn(
                 "w-4 h-4",
                 activeTab === item.id ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"

@@ -33,7 +33,7 @@ interface IssueCardProps {
 
 const VOTE_THRESHOLD = 5; 
 
-export function IssueCard({ issue, user, isPersonalFeed }: IssueCardProps) {
+export const IssueCard = React.memo(({ issue, user, isPersonalFeed }: IssueCardProps) => {
   const { t } = useLanguage();
   const [isVoting, setIsVoting] = useState(false);
   const [isEscalating, setIsEscalating] = useState(false);
@@ -511,4 +511,4 @@ export function IssueCard({ issue, user, isPersonalFeed }: IssueCardProps) {
       </div>
     </div>
   );
-}
+});

@@ -36,15 +36,18 @@ export function Header({ user, onFilterChange, onMenuClick, onNotificationClick 
       <div className="flex items-center gap-2 sm:gap-4 flex-1">
         <button 
           onClick={onMenuClick}
-          className="lg:hidden p-2 text-slate-500 hover:bg-slate-50 rounded-lg"
+          aria-label="Open Navigation Menu"
+          className="lg:hidden p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-colors"
         >
-          <Menu className="w-5 h-5" />
+          <Menu className="w-5 h-5" aria-hidden="true" />
         </button>
         <div className="relative max-w-sm w-full hidden md:block">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-            <MapPin className="w-4 h-4 text-slate-400" />
+            <MapPin className="w-4 h-4 text-slate-400" aria-hidden="true" />
           </div>
+          <label htmlFor="zip-select" className="sr-only">Filter by Area</label>
           <select 
+            id="zip-select"
             value={selectedZip}
             onChange={handleZipChange}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all appearance-none cursor-pointer"
@@ -80,10 +83,11 @@ export function Header({ user, onFilterChange, onMenuClick, onNotificationClick 
         </div>
         <button 
           onClick={onNotificationClick}
+          aria-label="View Notifications"
           className="relative p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
         >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          <Bell className="w-5 h-5" aria-hidden="true" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white ring-2 ring-red-500/20 animate-pulse"></span>
         </button>
 
         <div className="lg:hidden flex items-center shrink-0">
